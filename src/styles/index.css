@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "RobotoMono";
+  src: url("./RobotoMono-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "RobotoMono";
+  src: url("./RobotoMono-Light.ttf");
+  font-weight: 300;
+  font-style: normal;
+}
+
+:root {
+  font-family: RobotoMono, "Times New Roman", Times, serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  overflow: hidden;
+  color-scheme: dark;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+/** Marker definition **/
+& .marker-base {
+  border-radius: 999px !important;
+  cursor: default !important;
+}
+
+& .green1 {
+  background-color: #036f3e;
+}
+
+& .green1-text {
+  color: #036f3e;
+}
+
+& .red1 {
+  background-color: #d40028;
+}
+
+& .red1-text {
+  color: #d40028;
+}
+
+& .green2 {
+  background-color: #00a53c;
+}
+
+& .green2-text {
+  color: #00a53c;
+}
+
+& .red2 {
+  background-color: #c30022;
+}
+
+& .red2-text {
+  color: #c30022;
+}
+
+& .green3 {
+  background-color: #13cc4e;
+}
+
+& .green3-text {
+  color: #13cc4e;
+}
