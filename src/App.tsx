@@ -42,8 +42,8 @@ const year = parseInt(dayjs().format("YYYY"), 10);
 
 const currentDay = year > 2023 ? 24 : Math.min(day, 25) - 1;
 
-// const isAdventOrFuture = year > 2023 || (year === 2023 && month === 12);
-const isAdventOrFuture = true;
+const isAdventOrFuture = year > 2023 || (year === 2023 && month === 12);
+// const isAdventOrFuture = true; // Testing only
 
 const App = () => {
   const [daysFound, setDaysFound] = useState<number[]>(
@@ -98,8 +98,8 @@ const App = () => {
       <StyledMapContainer
         center={[-27.43, 153.03]}
         maxBounds={[
-          [-27.3, 152.8],
-          [-27.6, 153.3],
+          [-27.3, 152.7],
+          [-27.6, 153.4],
         ]}
         zoom={12}
         zoomControl={false}
