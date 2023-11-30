@@ -84,6 +84,11 @@ const App = () => {
 
   // Pointer arrow
   const [isUsingHelp, setIsUsingHelp] = useState(false);
+  const [pointerArrowProps, setPointerArrowProps] = useState({
+    top: "0px",
+    left: "0px",
+    opacity: 1,
+  });
 
   const [daysFound, setDaysFound] = useState<number[]>(
     JSON.parse(localStorage.getItem("DAYS_FOUND") ?? "[]")
@@ -135,6 +140,33 @@ const App = () => {
   // Loaded on render
   useEffect(() => setIsLoaded(true), []);
 
+  // Handle help -> point
+  const pointToNextPoint = useCallback((event: MouseEvent) => {
+    const nextMarker = document.querySelector(".findable");
+
+    if (nextMarker) {
+      const angleToNextMarker = nextMarker.getBoundingClientRect();
+
+      setPointerArrowProps({
+        left: `${event.clientX - 20}px`,
+        top: `${event.clientY - 20}px`,
+        opacity: 1,
+      });
+    } else {
+      setPointerArrowProps({
+        left: `${event.clientX - 20}px`,
+        top: `${event.clientY - 20}px`,
+        opacity: 0,
+      });
+    }
+  }, []);
+
+  // TODO:
+  /* useEffect(() => {
+    window.addEventListener("mousemove", pointToNextPoint);
+    return () => window.removeEventListener("mousemove", pointToNextPoint);
+  }, [pointToNextPoint]); */
+
   return (
     <Wrapper>
       {/* TODO: Architect correctly, abstract to components */}
@@ -164,6 +196,7 @@ const App = () => {
               <React.Fragment key={point.day}>
                 {!daysFound.includes(point.day) ? (
                   <Rectangle
+                    className="findable"
                     bounds={[
                       [point.lat + 0.0005, point.lon - 0.0005],
                       [point.lat - 0.0005, point.lon + 0.0005],
@@ -208,10 +241,26 @@ const App = () => {
           <Counter>
             {daysFound.length} of {isAdventOrFuture ? currentDay : 0}
           </Counter>
-          <Help onClick={() => setIsUsingHelp((prev) => !prev)}>
+          {/* TODO: */}
+          {/* <Help onClick={() => setIsUsingHelp((prev) => !prev)}>
             {isUsingHelp ? "🙅‍♂️" : "👁️"}
-          </Help>
+          </Help> */}
         </ProgressWrapper>
+      )}
+      {isUsingHelp && (
+        <div
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: "20x solid transparent",
+            borderRight: "20px solid transparent",
+            borderBottom: "20px solid #d40028a6",
+            position: "absolute",
+            zIndex: 900,
+            pointerEvents: "none",
+            ...pointerArrowProps,
+          }}
+        />
       )}
     </Wrapper>
   );
