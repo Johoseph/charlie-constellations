@@ -1,5 +1,5 @@
 import "leaflet/dist/leaflet.css";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { styled, setup } from "goober";
 import { MapContainer, Marker, Rectangle, TileLayer } from "react-leaflet";
 import { DivIcon, LeafletMouseEvent } from "leaflet";
@@ -34,18 +34,57 @@ const DayHover = styled("div")`
   transition: opacity ease-in-out 200ms;
 `;
 
+const ProgressWrapper = styled("div")`
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  display: flex;
+  z-index: 800;
+  font-size: 1.5rem;
+`;
+
+const Counter = styled("div")`
+  margin-right: 15px;
+  background-color: #13cc4ea6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+`;
+
+const Help = styled("button")`
+  background-color: #13cc4ea6;
+  padding: 8px 16px;
+  border-radius: 999px;
+  outline: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: background-color linear 200ms;
+
+  &:hover {
+    background-color: #13cc4ef2;
+  }
+`;
+
 const palette = ["green1", "red1", "green2", "red2", "green3"];
 
 const day = parseInt(dayjs().format("D"), 10);
 const month = parseInt(dayjs().format("M"), 10);
 const year = parseInt(dayjs().format("YYYY"), 10);
 
-const currentDay = year > 2023 ? 24 : Math.min(day, 25) - 1;
+const currentDay = year > 2023 ? 24 : Math.min(day, 24);
 
 const isAdventOrFuture = year > 2023 || (year === 2023 && month === 12);
-// const isAdventOrFuture = true; // Testing only
 
 const App = () => {
+  // Allow font families to load
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Pointer arrow
+  const [isUsingHelp, setIsUsingHelp] = useState(false);
+
   const [daysFound, setDaysFound] = useState<number[]>(
     JSON.parse(localStorage.getItem("DAYS_FOUND") ?? "[]")
   );
@@ -93,8 +132,12 @@ const App = () => {
     []
   );
 
+  // Loaded on render
+  useEffect(() => setIsLoaded(true), []);
+
   return (
     <Wrapper>
+      {/* TODO: Architect correctly, abstract to components */}
       <StyledMapContainer
         center={[-27.43, 153.03]}
         maxBounds={[
@@ -160,6 +203,16 @@ const App = () => {
       >
         {dayHover.day}
       </DayHover>
+      {isLoaded && (
+        <ProgressWrapper>
+          <Counter>
+            {daysFound.length} of {isAdventOrFuture ? currentDay : 0}
+          </Counter>
+          <Help onClick={() => setIsUsingHelp((prev) => !prev)}>
+            {isUsingHelp ? "🙅‍♂️" : "👁️"}
+          </Help>
+        </ProgressWrapper>
+      )}
     </Wrapper>
   );
 };
