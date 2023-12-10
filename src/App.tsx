@@ -121,8 +121,11 @@ const App = () => {
             event.originalEvent.target as HTMLDivElement
           ).getBoundingClientRect();
 
+          // Extra padding for 2 digit days
+          const leftPad = day.toString().length === 1 ? 30 : 50;
+
           return {
-            left: pointRect.x - 30,
+            left: pointRect.x - leftPad,
             top: pointRect.y - 30,
             day,
             showing: true,
