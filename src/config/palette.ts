@@ -1,0 +1,1 @@
+export default ["green1", "red1", "green2", "red2", "green3"];
