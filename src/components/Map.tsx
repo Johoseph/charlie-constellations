@@ -1,5 +1,5 @@
 import "leaflet/dist/leaflet.css";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { styled } from "goober";
 import { MapContainer, Marker, Rectangle, TileLayer } from "react-leaflet";
 import { DivIcon, LeafletMouseEvent } from "leaflet";
@@ -12,16 +12,21 @@ import { HoverConfig } from "../types";
 const StyledMapContainer = styled(MapContainer)`
   height: 100%;
   width: 100%;
-  cursor: crosshair;
 `;
 
 interface MapProps {
   daysFound: number[];
   setDaysFound: React.Dispatch<React.SetStateAction<number[]>>;
   setDayHover: React.Dispatch<React.SetStateAction<HoverConfig>>;
+  isUsingHelp: boolean;
 }
 
-export const Map = ({ daysFound, setDaysFound, setDayHover }: MapProps) => {
+export const Map = ({
+  daysFound,
+  setDaysFound,
+  setDayHover,
+  isUsingHelp,
+}: MapProps) => {
   const handleRectClick = useCallback(
     (day: number) => {
       setDaysFound((prevDay) => {
@@ -64,6 +69,15 @@ export const Map = ({ daysFound, setDaysFound, setDayHover }: MapProps) => {
     [setDayHover]
   );
 
+  useEffect(() => {
+    // Leaflet map does not accept new style props on re-render - use document methods to force update
+    const mapContainer: HTMLDivElement | null =
+      document.querySelector(".advent-map");
+
+    if (mapContainer)
+      mapContainer.style.cursor = isUsingHelp ? "none" : "crosshair";
+  }, [isUsingHelp]);
+
   return (
     <StyledMapContainer
       center={[-27.43, 153.03]}
@@ -77,6 +91,7 @@ export const Map = ({ daysFound, setDaysFound, setDayHover }: MapProps) => {
       minZoom={12}
       maxZoom={18}
       maxBoundsViscosity={1}
+      className="advent-map"
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
