@@ -1,24 +1,20 @@
 import "leaflet/dist/leaflet.css";
 import React, { useCallback, useEffect } from "react";
-import { styled } from "goober";
 import { MapContainer, Marker, Rectangle, TileLayer } from "react-leaflet";
-import { DivIcon, LeafletMouseEvent } from "leaflet";
+import { DivIcon, LeafletMouseEvent, Map as MapType } from "leaflet";
 
 import { points } from "../config/points";
 import palette from "../config/palette";
 import { currentDay, isAdventOrFuture } from "../helpers/day";
 import { HoverConfig } from "../types";
-
-const StyledMapContainer = styled(MapContainer)`
-  height: 100%;
-  width: 100%;
-`;
+import { DEFAULT_CENTER, DEFAULT_ZOOM } from "../config/map";
 
 interface MapProps {
   daysFound: number[];
   setDaysFound: React.Dispatch<React.SetStateAction<number[]>>;
   setDayHover: React.Dispatch<React.SetStateAction<HoverConfig>>;
   isUsingHelp: boolean;
+  setMap: React.Dispatch<React.SetStateAction<MapType | null>>;
 }
 
 export const Map = ({
@@ -26,6 +22,7 @@ export const Map = ({
   setDaysFound,
   setDayHover,
   isUsingHelp,
+  setMap,
 }: MapProps) => {
   const handleRectClick = useCallback(
     (day: number) => {
@@ -79,19 +76,20 @@ export const Map = ({
   }, [isUsingHelp]);
 
   return (
-    <StyledMapContainer
-      center={[-27.43, 153.03]}
+    <MapContainer
+      center={DEFAULT_CENTER}
       maxBounds={[
         [-27.3, 152.7],
         [-27.6, 153.4],
       ]}
-      zoom={12}
+      zoom={DEFAULT_ZOOM}
       zoomControl={false}
       attributionControl={false}
       minZoom={12}
       maxZoom={18}
       maxBoundsViscosity={1}
       className="advent-map"
+      ref={setMap}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
@@ -137,6 +135,6 @@ export const Map = ({
           );
         })
       )}
-    </StyledMapContainer>
+    </MapContainer>
   );
 };
