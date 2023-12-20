@@ -1,5 +1,5 @@
+import { useMemo } from "react";
 import { keyframes, styled } from "goober";
-import { points } from "../config/points";
 
 const GalaxyWrapper = styled("div")`
   width: 100%;
@@ -22,14 +22,20 @@ const Star = styled("div")`
   border-radius: 2px;
   box-shadow: 0 0 1px 1px white;
   animation: ${twinkle} 3s ease-in-out infinite;
+  position: absolute;
 `;
 
 export const Galaxy = () => {
-  return (
-    <GalaxyWrapper>
-      {points.map((point) => (
-        <Star key={point.day} />
-      ))}
-    </GalaxyWrapper>
-  );
+  const pointsToStars = () => {
+    // Get pos from map
+    const markers = Array.from(document.querySelectorAll(".marker-base"));
+
+    return markers.map((marker) => {
+      const { top, left, height, width } = marker.getBoundingClientRect();
+
+      return <Star style={{ top: top + height / 2, left: left + width / 2 }} />;
+    });
+  };
+
+  return <GalaxyWrapper>{pointsToStars()}</GalaxyWrapper>;
 };

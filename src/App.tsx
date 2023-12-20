@@ -81,14 +81,20 @@ const App = () => {
     if (isStarry) {
       setIsStarry(false);
       mapContainer.style.opacity = "1";
+      mapContainer.style.pointerEvents = "unset";
+      mapContainer.style.cursor = "crosshair";
       return;
     }
 
-    setIsStarry(true);
     map.setView(DEFAULT_CENTER, DEFAULT_ZOOM);
 
     // Fade out map; Fade in constellations
-    setTimeout(() => (mapContainer.style.opacity = "0"), 250);
+    setTimeout(() => {
+      setIsStarry(true);
+      mapContainer.style.opacity = "0";
+      mapContainer.style.pointerEvents = "none";
+      mapContainer.style.cursor = "default";
+    }, 250);
   };
 
   // Loaded on render
@@ -102,9 +108,10 @@ const App = () => {
       <Galaxy />
       <Map
         daysFound={daysFound}
+        isUsingHelp={isUsingHelp}
+        isStarry={isStarry}
         setDaysFound={setDaysFound}
         setDayHover={setDayHover}
-        isUsingHelp={isUsingHelp}
         setMap={setMap}
       />
       <DayHover dayHover={dayHover} />

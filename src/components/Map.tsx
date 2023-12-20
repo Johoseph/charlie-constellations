@@ -15,6 +15,7 @@ interface MapProps {
   setDayHover: React.Dispatch<React.SetStateAction<HoverConfig>>;
   isUsingHelp: boolean;
   setMap: React.Dispatch<React.SetStateAction<MapType | null>>;
+  isStarry: boolean;
 }
 
 export const Map = ({
@@ -23,6 +24,7 @@ export const Map = ({
   setDayHover,
   isUsingHelp,
   setMap,
+  isStarry,
 }: MapProps) => {
   const handleRectClick = useCallback(
     (day: number) => {
@@ -41,6 +43,8 @@ export const Map = ({
 
   const handleMarkerHover = useCallback(
     (event: LeafletMouseEvent, day: number) => {
+      if (isStarry) return;
+
       if (event.type === "mouseover") {
         setDayHover(() => {
           const pointRect = (
@@ -63,7 +67,7 @@ export const Map = ({
         setDayHover((prev) => ({ ...prev, showing: false }));
       }
     },
-    [setDayHover]
+    [setDayHover, isStarry]
   );
 
   useEffect(() => {
