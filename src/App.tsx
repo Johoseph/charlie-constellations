@@ -4,7 +4,7 @@ import { Map as MapType } from "leaflet";
 import { styled, setup } from "goober";
 
 import { Map, DayHover, HelpArrow, Galaxy } from "./components";
-import { currentDay, isAdventOrFuture } from "./helpers/day";
+import { currentDay, isAdventOrFuture, isChristmasDay } from "./helpers/day";
 import { HoverConfig } from "./types";
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "./config/map";
 
@@ -43,7 +43,7 @@ const ProgressButton = styled("button")`
   outline: none;
   border: none;
   font-size: 2rem;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   transition: background-color linear 200ms;
 
   &:hover {
@@ -127,7 +127,18 @@ const App = () => {
             {isUsingHelp ? "🙅‍♂️" : "👁️"}
           </ProgressButton>
           {currentDay === 24 && daysFound.length === currentDay && (
-            <ProgressButton onClick={showConstellation}>💫</ProgressButton>
+            <ProgressButton onClick={showConstellation}>
+              {isStarry ? "🌏" : "💫"}
+            </ProgressButton>
+          )}
+          {currentDay === 24 && daysFound.length === currentDay && isStarry && (
+            <ProgressButton
+              onClick={showConstellation}
+              disabled={!isChristmasDay}
+              style={{ fontSize: "1.5rem" }}
+            >
+              25
+            </ProgressButton>
           )}
         </ProgressWrapper>
       )}
