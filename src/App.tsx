@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Map as MapType } from "leaflet";
 import { styled, setup } from "goober";
 
-import { Map, DayHover, HelpArrow, Galaxy } from "./components";
+import { Map, DayHover, HelpArrow, Galaxy, Charlie } from "./components";
 import { currentDay, isAdventOrFuture, isChristmasDay } from "./helpers/day";
 import { HoverConfig } from "./types";
 import { DEFAULT_CENTER, DEFAULT_ZOOM } from "./config/map";
@@ -53,7 +53,11 @@ const ProgressButton = styled("button")`
 
 const App = () => {
   const [map, setMap] = useState<MapType | null>(null);
+  // TODO: State overkill?
   const [isStarry, setIsStarry] = useState(false);
+  const [isC11nBuilding, setIsC11nBuilding] = useState(false);
+  const [isC11nBuilt, setIsC11nBuilt] = useState(false);
+  const [showCharlie, setShowCharlie] = useState(false);
 
   // Allow font families to load
   const [isLoaded, setIsLoaded] = useState(false);
@@ -71,6 +75,28 @@ const App = () => {
     showing: false,
   });
 
+  const resetConstellation = (mapContainer: HTMLDivElement) => {
+    // State
+    setIsStarry(false);
+    setIsC11nBuilt(false);
+    setShowCharlie(false);
+
+    // Style
+    mapContainer.style.opacity = "1";
+    mapContainer.style.pointerEvents = "unset";
+    mapContainer.style.cursor = "crosshair";
+
+    const connections: HTMLDivElement[] = Array.from(
+      document.querySelectorAll(".c11n-connection")
+    );
+
+    for (const connection of connections) {
+      setTimeout(() => {
+        connection.style.width = `0px`;
+      }, 1000);
+    }
+  };
+
   const showConstellation = () => {
     const mapContainer: HTMLDivElement | null =
       document.querySelector(".advent-map");
@@ -79,10 +105,7 @@ const App = () => {
 
     // Reset if starry
     if (isStarry) {
-      setIsStarry(false);
-      mapContainer.style.opacity = "1";
-      mapContainer.style.pointerEvents = "unset";
-      mapContainer.style.cursor = "crosshair";
+      resetConstellation(mapContainer);
       return;
     }
 
@@ -95,6 +118,37 @@ const App = () => {
       mapContainer.style.pointerEvents = "none";
       mapContainer.style.cursor = "default";
     }, 250);
+  };
+
+  const buildConstellation = () => {
+    setIsC11nBuilding(true);
+
+    const connections: HTMLDivElement[] = Array.from(
+      document.querySelectorAll(".c11n-connection")
+    );
+
+    for (
+      let connectionNo = 1;
+      connectionNo <= connections.length;
+      connectionNo++
+    ) {
+      const { c11nIndex, c11nWidth } = connections[connectionNo - 1].dataset;
+
+      const connectionTimeout = parseInt(c11nIndex ?? "0", 10) * 500;
+
+      // Update width as per element gradually
+      setTimeout(() => {
+        connections[connectionNo - 1].style.width = `${parseInt(
+          c11nWidth as string,
+          10
+        )}px`;
+
+        if (connectionNo === connections.length) {
+          setIsC11nBuilding(false);
+          setIsC11nBuilt(true);
+        }
+      }, connectionTimeout);
+    }
   };
 
   // Loaded on render
@@ -127,22 +181,34 @@ const App = () => {
             {isUsingHelp ? "🙅‍♂️" : "👁️"}
           </ProgressButton>
           {currentDay === 24 && daysFound.length === currentDay && (
-            <ProgressButton onClick={showConstellation}>
+            <ProgressButton
+              onClick={showConstellation}
+              disabled={isC11nBuilding}
+            >
               {isStarry ? "🌏" : "💫"}
             </ProgressButton>
           )}
           {currentDay === 24 && daysFound.length === currentDay && isStarry && (
-            <ProgressButton
-              onClick={showConstellation}
-              disabled={!isChristmasDay}
-              style={{ fontSize: "1.5rem" }}
-            >
-              25
-            </ProgressButton>
+            <>
+              {isC11nBuilt ? (
+                <ProgressButton onClick={() => setShowCharlie((prev) => !prev)}>
+                  {showCharlie ? "🙉" : "🙈"}
+                </ProgressButton>
+              ) : (
+                <ProgressButton
+                  onClick={buildConstellation}
+                  disabled={!isChristmasDay || isC11nBuilding}
+                  style={{ fontSize: "1.5rem" }}
+                >
+                  25
+                </ProgressButton>
+              )}
+            </>
           )}
         </ProgressWrapper>
       )}
       {isUsingHelp && <HelpArrow />}
+      <Charlie showCharlie={showCharlie} />
     </Wrapper>
   );
 };

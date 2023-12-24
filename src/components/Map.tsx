@@ -126,7 +126,7 @@ export const Map = ({
                     new DivIcon({
                       className: `marker-base ${
                         palette[index % palette.length]
-                      }`,
+                      } c11n-${point.c11n}`,
                     })
                   }
                   eventHandlers={{
