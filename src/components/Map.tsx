@@ -104,14 +104,21 @@ export const Map = ({
           if (point.day > currentDay)
             return <React.Fragment key={point.day}></React.Fragment>;
 
+          const lat =
+            parseFloat(import.meta.env.VITE_LATITUDE_CENTER) + point.latOffset;
+          const lon =
+            parseFloat(import.meta.env.VITE_LONGITUDE_CENTER) + point.lonOffset;
+
+          console.log({ lat, lon });
+
           return (
             <React.Fragment key={point.day}>
               {!daysFound.includes(point.day) ? (
                 <Rectangle
                   className="findable"
                   bounds={[
-                    [point.lat + 0.0005, point.lon - 0.0005],
-                    [point.lat - 0.0005, point.lon + 0.0005],
+                    [lat + 0.0005, lon - 0.0005],
+                    [lat - 0.0005, lon + 0.0005],
                   ]}
                   opacity={0}
                   fillOpacity={0}
@@ -121,7 +128,7 @@ export const Map = ({
                 />
               ) : (
                 <Marker
-                  position={[point.lat, point.lon]}
+                  position={[lat, lon]}
                   icon={
                     new DivIcon({
                       className: `marker-base ${
