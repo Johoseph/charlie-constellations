@@ -7,7 +7,12 @@ import { points } from "../config/points";
 import palette from "../config/palette";
 import { currentDay, isAdventOrFuture } from "../helpers/day";
 import { HoverConfig } from "../types";
-import { DEFAULT_CENTER, DEFAULT_ZOOM } from "../config/map";
+import {
+  DEFAULT_CENTER,
+  DEFAULT_LATITUDE_CENTER,
+  DEFAULT_LONGITUDE_CENTER,
+  DEFAULT_ZOOM,
+} from "../config/map";
 
 interface MapProps {
   daysFound: number[];
@@ -83,8 +88,14 @@ export const Map = ({
     <MapContainer
       center={DEFAULT_CENTER}
       maxBounds={[
-        [-27.3, 152.7],
-        [-27.6, 153.4],
+        [
+          parseFloat((DEFAULT_LATITUDE_CENTER + 0.15).toFixed(1)),
+          parseFloat((DEFAULT_LONGITUDE_CENTER - 0.3).toFixed(1)),
+        ],
+        [
+          parseFloat((DEFAULT_LATITUDE_CENTER - 0.15).toFixed(1)),
+          parseFloat((DEFAULT_LONGITUDE_CENTER + 0.3).toFixed(1)),
+        ],
       ]}
       zoom={DEFAULT_ZOOM}
       zoomControl={false}
@@ -104,12 +115,8 @@ export const Map = ({
           if (point.day > currentDay)
             return <React.Fragment key={point.day}></React.Fragment>;
 
-          const lat =
-            parseFloat(import.meta.env.VITE_LATITUDE_CENTER) + point.latOffset;
-          const lon =
-            parseFloat(import.meta.env.VITE_LONGITUDE_CENTER) + point.lonOffset;
-
-          console.log({ lat, lon });
+          const lat = DEFAULT_LATITUDE_CENTER + point.latOffset;
+          const lon = DEFAULT_LONGITUDE_CENTER + point.lonOffset;
 
           return (
             <React.Fragment key={point.day}>
