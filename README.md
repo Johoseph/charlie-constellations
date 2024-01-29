@@ -1,6 +1,6 @@
 # Charlie Constellation 💫💫
 
-Charlie Constellation is a 2023 Advent Calendar made for my partner Flick. This project was built using Vite's React Typescript template, and relies heavily on the [leaflet](https://leafletjs.com/) mapping library.
+[Charlie Constellation](https://charlie-constellations.vercel.app/) is a 2023 Advent Calendar made for my partner Flick. This project was built using Vite's React Typescript template, and relies heavily on the [leaflet](https://leafletjs.com/) mapping library.
 
 Each day of advent, Flick was given a physical photo clue that correlated to a specific coordinate on the map. Finding all 24 points creates a 'constellation', which on Christmas day unlocks becomes animates and reveals our dog Charlie!
 
