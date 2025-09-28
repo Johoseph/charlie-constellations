@@ -1,4 +1,5 @@
 import { keyframes, styled } from "goober";
+import { JSX } from "react";
 
 const GalaxyWrapper = styled("div")`
   width: 100%;
